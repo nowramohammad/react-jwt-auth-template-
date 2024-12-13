@@ -1,5 +1,3 @@
-// src/services/authService.js
-
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const signup = async (formData) => {

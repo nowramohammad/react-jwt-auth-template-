@@ -1,29 +1,36 @@
-// SignupForm.jsx
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import * as authService from "../../services/authService";
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-const SignupForm = (props) => {
+const Signup = ({setUser}) => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState(['']);
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    passwordConf: '',
+    username: "",
+    password: "",
+    passwordConf: "",
   });
 
-  const updateMessage = (msg) => {
-    setMessage(msg);
-  };
+  const updateMessage = (msg) => setMessage(msg);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    updateMessage('');
-    console.log(formData); // this line will print the form data to the console
+    try{
+
+      console.log(formData);
+      const res = await authService.signup(formData)
+      console.log(res);
+      setUser(formData);
+      navigate("/");
+
+    }catch(err){
+      updateMessage(err.message);
+    }
+
+
   };
 
   const { username, password, passwordConf } = formData;
@@ -34,41 +41,41 @@ const SignupForm = (props) => {
 
   return (
     <main>
-      <h1>Sign Up</h1>
+      <h1>Sign up</h1>
       <p>{message}</p>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username:</label>
           <input
             type="text"
-            id="name"
-            value={username}
             name="username"
+            id="username"
+            value={username}
             onChange={handleChange}
           />
         </div>
         <div>
           <label htmlFor="password">Password:</label>
           <input
-            type="password"
+            type="text"
+            name="password"
             id="password"
             value={password}
-            name="password"
             onChange={handleChange}
           />
         </div>
         <div>
-          <label htmlFor="confirm">Confirm Password:</label>
+          <label htmlFor="passwordConf">Confirm Password:</label>
           <input
-            type="password"
-            id="confirm"
-            value={passwordConf}
+            type="text"
             name="passwordConf"
+            id="password"
+            value={passwordConf}
             onChange={handleChange}
           />
         </div>
         <div>
-          <button disabled={isFormInvalid()}>Sign Up</button>
+          <button disabled={isFormInvalid()}>Sign up</button>
           <Link to="/">
             <button>Cancel</button>
           </Link>
@@ -78,4 +85,4 @@ const SignupForm = (props) => {
   );
 };
 
-export default SignupForm;
+export default Signup;
